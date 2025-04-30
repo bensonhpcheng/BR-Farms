@@ -1,0 +1,11 @@
+__pycache__/
+*.mp4
+*.jpg
+*.json
+oauth2.json
+client_secrets.json
+harvested_raw/
+source_vid/
+shorts_ready/
+thumbnails/
+metadata/
