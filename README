@@ -1,0 +1,104 @@
+# 🧠 BrainRot Media Automation Suite
+
+> Fully automated pipeline for harvesting, slicing, and uploading viral content across platforms like YouTube Shorts, TikTok, and Instagram Reels.
+
+Built for dopamine addicts, content farms, and operators of algorithmic influence.
+
+---
+
+## 📦 Modules Overview
+
+| Module            | Purpose                                        |
+| ----------------- | ---------------------------------------------- |
+| `harvester.py`    | Harvest longform trending YouTube videos       |
+| `smart_slicer.py` | Transcribe + smart-cut high-attention segments |
+| `uploader.py`     | Auto-upload to YouTube Shorts w/ metadata      |
+
+---
+
+## 🛠️ Setup
+
+### 🔧 Prerequisites
+
+- Python 3.9+
+- [ffmpeg](https://ffmpeg.org/download.html) (in your system PATH)
+- `yt-dlp`
+- Google Cloud API credentials (`client_secrets.json`)
+- GPU (recommended for Whisper speed)
+
+### 📥 Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+⚙️ Folder Structure
+bash
+Copy
+Edit
+BrainRot Farm/
+├── harvested_raw/ # Raw longform videos from YouTube
+├── shorts_ready/ # Smart-sliced vertical clips ready to post
+├── source_vid/ # Mid-stage, preview-able edits
+├── metadata/ # JSON metadata per clip
+├── thumbnails/ # Auto-generated thumbnails (optional)
+├── harvester.py
+├── smart_slicer.py
+├── uploader.py
+├── .gitignore
+└── requirements.txt
+🤖 Usage
+
+1. Harvest Content
+   bash
+   Copy
+   Edit
+   python harvester.py
+   Downloads multiple longform videos based on randomized viral keywords.
+
+2. Smart Slice
+   bash
+   Copy
+   Edit
+   python smart_slicer.py
+   Transcribes each clip via Whisper
+
+Detects "hot" phrases (e.g. “truth”, “wtf”, “you won’t believe”)
+
+Cuts segments (8–30s) into vertical-ready .mp4s
+
+Saves transcription + metadata .json
+
+3. Upload to YouTube Shorts
+   bash
+   Copy
+   Edit
+   python uploader.py
+   Filters non-vertical clips
+
+Auto-generates:
+
+Title from audio
+
+Hashtags
+
+Engagement comment
+
+Uploads via YouTube API
+
+🔮 Coming Soon
+✅ Auto thumbnail with overlaid captions
+
+✅ Smart classifier: meme / podcast / reaction
+
+🔄 Cross-platform poster: TikTok, IG Reels, Twitter
+
+📊 Stats tracker + performance analytics
+
+🧠 LLM-curated keyword pool
+
+📜 License
+Unlicensed. Meme responsibly.
+
+🤘 Credits
+Built with rage, coffee, and machine learning. Whisper by OpenAI. yt-dlp is a gift to mankind.
