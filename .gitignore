@@ -9,3 +9,4 @@ source_vid/
 shorts_ready/
 thumbnails/
 metadata/
+.venv/

@@ -22,3 +22,64 @@
 [2025-04-30 01:35:58] [AIM] 🔍 Querying: insane insane compilation
 [2025-04-30 01:36:12] 
 [+] ✅ Harvest complete. 13 new files saved to 'harvested_raw'.
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: crazy gym highlights
+[2025-05-03 13:00:58] [!] Error downloading 'crazy gym highlights': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: crazy conspiracy compilation
+[2025-05-03 13:00:58] [!] Error downloading 'crazy conspiracy compilation': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: ultimate viral compilation
+[2025-05-03 13:00:58] [!] Error downloading 'ultimate viral compilation': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: ultimate basketball clips
+[2025-05-03 13:00:58] [!] Error downloading 'ultimate basketball clips': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: wild redpill moments
+[2025-05-03 13:00:58] [!] Error downloading 'wild redpill moments': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: top sigma compilation
+[2025-05-03 13:00:58] [!] Error downloading 'top sigma compilation': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: crazy stand fails
+[2025-05-03 13:00:58] [!] Error downloading 'crazy stand fails': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: viral forbidden shorts
+[2025-05-03 13:00:58] [!] Error downloading 'viral forbidden shorts': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: top brainrot fails
+[2025-05-03 13:00:58] [!] Error downloading 'top brainrot fails': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: wild insane moments
+[2025-05-03 13:00:58] [!] Error downloading 'wild insane moments': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] [AIM] 🔍 Querying: best oddly moments
+[2025-05-03 13:00:58] [!] Error downloading 'best oddly moments': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:00:58] 
+[+] ✅ Harvest complete. 0 new files saved to 'harvested_raw'.
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: wild gym clips
+[2025-05-03 13:03:36] [!] Error downloading 'wild gym clips': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: wild conspiracy moments
+[2025-05-03 13:03:36] [!] Error downloading 'wild conspiracy moments': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: best viral shorts
+[2025-05-03 13:03:36] [!] Error downloading 'best viral shorts': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: insane basketball clips
+[2025-05-03 13:03:36] [!] Error downloading 'insane basketball clips': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: crazy redpill shorts
+[2025-05-03 13:03:36] [!] Error downloading 'crazy redpill shorts': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: viral sigma shorts
+[2025-05-03 13:03:36] [!] Error downloading 'viral sigma shorts': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: ultimate stand clips
+[2025-05-03 13:03:36] [!] Error downloading 'ultimate stand clips': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: crazy forbidden clips
+[2025-05-03 13:03:36] [!] Error downloading 'crazy forbidden clips': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: top brainrot shorts
+[2025-05-03 13:03:36] [!] Error downloading 'top brainrot shorts': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: viral insane clips
+[2025-05-03 13:03:36] [!] Error downloading 'viral insane clips': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] [AIM] 🔍 Querying: viral oddly fails
+[2025-05-03 13:03:36] [!] Error downloading 'viral oddly fails': [Errno 2] No such file or directory: 'yt-dlp'
+[2025-05-03 13:03:36] 
+[+] ✅ Harvest complete. 0 new files saved to 'harvested_raw'.
+[2025-05-03 13:04:32] [AIM] 🔍 Querying: wild gym compilation
+[2025-05-03 13:04:46] [AIM] 🔍 Querying: ultimate conspiracy fails
+[2025-05-03 13:05:14] [AIM] 🔍 Querying: viral viral compilation
+[2025-05-03 13:05:34] [AIM] 🔍 Querying: crazy basketball compilation
+[2025-05-03 13:05:54] [AIM] 🔍 Querying: insane redpill clips
+[2025-05-03 13:06:11] [AIM] 🔍 Querying: ultimate sigma clips
+[2025-05-03 13:06:20] [AIM] 🔍 Querying: wild stand moments
+[2025-05-03 13:06:36] [AIM] 🔍 Querying: ultimate forbidden moments
+[2025-05-03 13:06:42] [AIM] 🔍 Querying: wild brainrot compilation
+[2025-05-03 13:06:47] [AIM] 🔍 Querying: crazy insane moments
+[2025-05-03 13:06:55] [AIM] 🔍 Querying: viral oddly highlights
+[2025-05-03 13:08:15] 
+[+] ✅ Harvest complete. 21 new files saved to 'harvested_raw'.
