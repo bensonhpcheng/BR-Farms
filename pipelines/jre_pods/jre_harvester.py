@@ -25,8 +25,8 @@ def read_keywords():
 
 def harvest_video(keyword):
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    clean_keyword = keyword.replace(" ", "_").lower()
-    print(f"[{timestamp}] 🔍 Harvesting: {keyword}")
+    clean_keyword = sanitize_filename(keyword.replace(" ", "_").lower())
+    print(f"[{timestamp[-6:]}] 🔍 Harvesting: {keyword}")
 
     search_term = f"ytsearch{MAX_VIDEOS_PER_KEYWORD}:{keyword}"
     try:
@@ -37,7 +37,7 @@ def harvest_video(keyword):
             f"duration >= {MIN_DURATION} & duration <= {MAX_DURATION}",
             "--restrict-filenames",
             "--format", "mp4",
-            "--output", str(SAVE_DIR / f"{clean_keyword}_video_%(id)s.%(ext)s")
+            "--output", str(SAVE_DIR / f"{timestamp}_{clean_keyword}_video_%(id)s.%(ext)s")
         ], check=True)
     except subprocess.CalledProcessError as e:
         print(f"[!] Error harvesting '{keyword}': {e}")
@@ -47,7 +47,7 @@ def main():
     for kw in keywords:
         harvest_video(kw)
 
-    print(f"\n[✓] Harvest complete. Files saved to: {SAVE_DIR}")
+    print(f"\n[✅] Harvest complete. Files saved to: {SAVE_DIR}")
 
 if __name__ == "__main__":
     main()
