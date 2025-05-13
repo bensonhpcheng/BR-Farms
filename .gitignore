@@ -10,3 +10,4 @@ shorts_ready/
 thumbnails/
 metadata/
 .venv/
+.env
