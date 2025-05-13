@@ -11,3 +11,4 @@ thumbnails/
 metadata/
 .venv/
 pipelines/jre_pods/.env
+pipelines/jre_pods/fail_logs

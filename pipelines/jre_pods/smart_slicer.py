@@ -48,51 +48,6 @@ def transcribe(path):
     json.dump(result, open(t_path, "w"), indent=2)
     return result["text"]
 
-def burn_subtitles(src, out, start, end, text):
-    try:
-        video = VideoFileClip(src)
-        clip_duration = video.duration
-        start = max(0, min(start, clip_duration - 0.5))
-        end = max(start + 0.5, min(end, clip_duration))
-
-        if start >= end:
-            raise ValueError(f"Invalid start/end: start={start}, end={end}, video duration={clip_duration}")
-
-        video = video.subclip(start, end)
-
-        W, H = video.size
-        font = ImageFont.truetype(SUBTITLE_STYLE["font_path"], SUBTITLE_STYLE["font_size"])
-        lines = text.splitlines() or [text]
-
-        img_height = SUBTITLE_STYLE["font_size"] * len(lines) + SUBTITLE_STYLE["padding"]
-        img = Image.new("RGB", (W, img_height), color=SUBTITLE_STYLE["bg_color"])
-        draw = ImageDraw.Draw(img)
-
-        for i, line in enumerate(lines):
-            w, h = draw.textbbox((0, 0), line, font=font)[2:]
-            x = (W - w) / 2
-            y = i * SUBTITLE_STYLE["font_size"]
-            draw.text(
-                (x, y),
-                line,
-                font=font,
-                fill=SUBTITLE_STYLE["font_color"],
-                stroke_width=SUBTITLE_STYLE["stroke_width"],
-                stroke_fill=SUBTITLE_STYLE["stroke_color"]
-            )
-
-        img_path = os.path.join(DIRS["output"], "_subtitle_temp.png")
-        img.save(img_path)
-
-        txt_clip = ImageClip(img_path).set_duration(video.duration).set_position(SUBTITLE_STYLE["align"])
-        final = CompositeVideoClip([video, txt_clip])
-        final.write_videofile(out, codec='libx264', audio_codec='aac', preset='ultrafast', logger=None)
-        return True
-
-    except Exception as e:
-        print(f"[❌] Subtitle burn failed: {e}")
-        return False
-
 # --- MAIN ---
 def run_slicer():
     print("\n[🚀] Smart Slicer MVP\n")
