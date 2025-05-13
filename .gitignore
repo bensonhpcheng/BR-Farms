@@ -10,4 +10,4 @@ shorts_ready/
 thumbnails/
 metadata/
 .venv/
-.env
+pipelines/jre_pods/.env
