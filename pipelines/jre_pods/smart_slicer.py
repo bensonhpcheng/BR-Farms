@@ -1,184 +1,149 @@
 import os
 import json
 import whisper
-import subprocess
-import requests
+from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
+from PIL import Image, ImageDraw, ImageFont
+from dotenv import load_dotenv
+import sys
+sys.path.append(os.path.dirname(__file__))
 
-# --- DYNAMIC PATHS ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCE_DIR = os.path.join(BASE_DIR, "harvested_raw")
-OUTPUT_DIR = os.path.join(BASE_DIR, "shorts_ready")
-META_DIR = os.path.join(BASE_DIR, "metadata")
-TRANSCRIPT_DIR = os.path.join(BASE_DIR, "transcripts")
+from segment_generator_hybrid import generate_segments
 
-LLM_MODEL = "mistral"
-MIN_LEN = 8
-MAX_LEN = 60  # allowing more flexibility
+# --- SETUP ---
+load_dotenv()
+BASE = os.path.dirname(os.path.abspath(__file__))
+DIRS = {
+    "source": os.path.join(BASE, "harvested_raw"),
+    "output": os.path.join(BASE, "shorts_ready"),
+    "meta": os.path.join(BASE, "metadata"),
+    "transcripts": os.path.join(BASE, "transcripts"),
+}
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-os.makedirs(META_DIR, exist_ok=True)
-os.makedirs(TRANSCRIPT_DIR, exist_ok=True)
+for d in DIRS.values():
+    os.makedirs(d, exist_ok=True)
 
-# --- TRANSCRIPTION ---
-def transcribe_video(path):
-    base_name = os.path.splitext(os.path.basename(path))[0]
-    transcript_path = os.path.join(TRANSCRIPT_DIR, f"{base_name}.transcript.json")
+# --- CONFIG ---
+SUBTITLE_STYLE = {
+    "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "font_size": 42,
+    "font_color": (255, 255, 255),
+    "stroke_color": (0, 0, 0),
+    "stroke_width": 2,
+    "bg_color": (0, 0, 0),
+    "padding": 20,
+    "align": ("center", "bottom"),
+}
 
-    if os.path.exists(transcript_path):
-        print(f"[📄] Cached transcript found for: {base_name}")
-        with open(transcript_path, "r") as f:
-            return json.load(f)["text"]
+# --- UTILS ---
+def transcribe(path):
+    base = os.path.splitext(os.path.basename(path))[0]
+    t_path = os.path.join(DIRS["transcripts"], f"{base}.json")
+    if os.path.exists(t_path):
+        print(f"[📄] Loaded cached transcript for: {base}")
+        return json.load(open(t_path))["text"]
 
-    print(f"\n[🎙️] TRANSCRIBING: {path}")
+    print(f"[🎙️] Transcribing {base}...")
     model = whisper.load_model("base")
     result = model.transcribe(path)
+    json.dump(result, open(t_path, "w"), indent=2)
+    return result["text"]
 
-    with open(transcript_path, "w") as f:
-        json.dump(result, f, indent=2)
-
-    print(f"[✅] Transcription complete — {len(result['text'])} characters")
-    return result['text']
-
-# --- LLM-BASED SEGMENT DETECTION ---
-def classify_segments_with_llm(transcript):
-    print("[🧠] Querying Mistral LLM for viral-worthy segments...")
-
-    system_prompt = """
-You are a viral content expert. Your job is to extract SHORT, standalone, attention-grabbing moments 
-from transcripts that would perform well on YouTube Shorts.
-
-For each moment, return the following in a clean JSON array:
-- start (in seconds)
-- end (in seconds)
-- title (hooky and viral)
-- reason (why it was chosen)
-- hashtags (relevant and trending, 3–6 max)
-- comment_prompt (question to drive engagement)
-- category (e.g., truth, comedy, motivation)
-
-Keep segments between 8–60 seconds. Do not return explanation, only valid JSON.
-
-Example:
-[
-  {
-    "start": 75,
-    "end": 93,
-    "title": "This Will Blow Your Mind 🤯",
-    "reason": "It reveals a shocking truth about human behavior.",
-    "hashtags": ["#truthbomb", "#mindblown", "#fyp"],
-    "comment_prompt": "Do you agree or disagree? 👇",
-    "category": "truth"
-  }
-]
-"""
-
-
-    payload = {
-        "model": LLM_MODEL,
-        "messages": [
-            {"role": "system", "content": system_prompt.strip()},
-            {"role": "user", "content": transcript.strip()}
-        ],
-        "stream": False
-    }
-
+def burn_subtitles(src, out, start, end, text):
     try:
-        response = requests.post("http://localhost:11434/api/chat", json=payload)
-        content = response.json()["message"]["content"].strip()
+        video = VideoFileClip(src)
+        clip_duration = video.duration
+        start = max(0, min(start, clip_duration - 0.5))
+        end = max(start + 0.5, min(end, clip_duration))
 
-        if not content.startswith("["):
-            content = content[content.find("["):]
+        if start >= end:
+            raise ValueError(f"Invalid start/end: start={start}, end={end}, video duration={clip_duration}")
 
-        parsed = json.loads(content)
-        print(f"[✅] LLM returned {len(parsed)} segment(s).")
-        return parsed
+        video = video.subclip(start, end)
+
+        W, H = video.size
+        font = ImageFont.truetype(SUBTITLE_STYLE["font_path"], SUBTITLE_STYLE["font_size"])
+        lines = text.splitlines() or [text]
+
+        img_height = SUBTITLE_STYLE["font_size"] * len(lines) + SUBTITLE_STYLE["padding"]
+        img = Image.new("RGB", (W, img_height), color=SUBTITLE_STYLE["bg_color"])
+        draw = ImageDraw.Draw(img)
+
+        for i, line in enumerate(lines):
+            w, h = draw.textbbox((0, 0), line, font=font)[2:]
+            x = (W - w) / 2
+            y = i * SUBTITLE_STYLE["font_size"]
+            draw.text(
+                (x, y),
+                line,
+                font=font,
+                fill=SUBTITLE_STYLE["font_color"],
+                stroke_width=SUBTITLE_STYLE["stroke_width"],
+                stroke_fill=SUBTITLE_STYLE["stroke_color"]
+            )
+
+        img_path = os.path.join(DIRS["output"], "_subtitle_temp.png")
+        img.save(img_path)
+
+        txt_clip = ImageClip(img_path).set_duration(video.duration).set_position(SUBTITLE_STYLE["align"])
+        final = CompositeVideoClip([video, txt_clip])
+        final.write_videofile(out, codec='libx264', audio_codec='aac', preset='ultrafast', logger=None)
+        return True
 
     except Exception as e:
-        print("[❌] LLM segment classification failed:", e)
-        print("👀 LLM Raw Output Preview:\n", content[:300] if 'content' in locals() else "[No content returned]")
-        return []
-
-# --- CLIPPER ---
-def slice_segment(video_path, out_path, start, end):
-    if start >= end:
-        print(f"[⚠️] Skipping invalid segment: start={start}, end={end}")
+        print(f"[❌] Subtitle burn failed: {e}")
         return False
 
-    cmd = [
-        "ffmpeg", "-y",
-        "-ss", str(start),
-        "-i", video_path,
-        "-t", str(end - start),
-        "-c:v", "libx264",
-        "-c:a", "aac",
-        "-preset", "ultrafast",
-        "-movflags", "+faststart",
-        out_path
-    ]
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if result.returncode != 0:
-        print(f"[❌] FFmpeg error for {out_path}:\n{result.stderr.decode()}")
-        return False
-
-    if os.path.getsize(out_path) < 10 * 1024:  # < 10 KB = junk
-        print(f"[🗑️] Deleted junk slice: {out_path}")
-        os.remove(out_path)
-        return False
-
-    print(f"[🎬] Clip saved: {out_path}")
-    return True
-
-# --- WORKFLOW ---
+# --- MAIN ---
 def run_slicer():
-    print("\n[🚀] Running Smart Slicer...")
-    files = [f for f in os.listdir(SOURCE_DIR) if f.endswith(".mp4")]
+    print("\n[🚀] Smart Slicer MVP\n")
+    files = [f for f in os.listdir(DIRS["source"]) if f.endswith(".mp4")]
+    print(f"[📁] Found {len(files)} file(s)")
 
-    if not files:
-        print("[⚠️] No videos found in harvested_raw/")
-        return
+    transcript_map = {}
+    all_segments = []
 
-    for file in files:
-        print(f"\n[📂] Processing: {file}")
-        video_path = os.path.join(SOURCE_DIR, file)
-        base_name = os.path.splitext(file)[0]
+    for f in files:
+        path = os.path.join(DIRS["source"], f)
+        base = os.path.splitext(f)[0]
+        transcript = transcribe(path)
+        transcript_map[base] = transcript
 
-        transcript = transcribe_video(video_path)
-        segments = classify_segments_with_llm(transcript)
+        print(f"[🧠] Generating segments for: {base}")
+        try:
+            segments = generate_segments(transcript)
+            for seg in segments:
+                seg["source_video"] = f"{base}.mp4"
+            all_segments.extend(segments)
+            print(f"[📦] Received {len(segments)} segment(s)\n")
+        except Exception as e:
+            print(f"[⚠️] Skipped {base}: {e}")
 
-        if not segments:
-            print(f"[🚫] No usable segments for: {file}")
-            continue
+    for idx, seg in enumerate(all_segments):
+        src_base = seg["source_video"].replace(".mp4", "")
+        source_path = os.path.join(DIRS["source"], seg["source_video"])
+        transcript_text = transcript_map.get(src_base, "")
+        snippet = transcript_text[seg["start"]:seg["end"]]
 
-        for idx, seg in enumerate(segments):
-            start, end = int(seg["start"]), int(seg["end"])
-            title = seg["title"]
-            clean_title = title.lower().replace(" ", "_").replace("?", "").replace("!", "").replace("\"", "")[:40]
-            out_file = f"{base_name}_{clean_title}_{idx+1:02d}.mp4"
-            out_path = os.path.join(OUTPUT_DIR, out_file)
-            meta_file = os.path.join(META_DIR, out_file.replace(".mp4", ".json"))
+        filename = f"{src_base}_{idx:02d}.mp4"
+        out_path = os.path.join(DIRS["output"], filename)
 
-            success = slice_segment(video_path, out_path, start, end)
-            if not success:
-                if os.path.exists(meta_file):
-                    os.remove(meta_file)
-                continue
-
+        print(f"[🎬] Rendering: {filename}")
+        if burn_subtitles(source_path, out_path, seg["start"], seg["end"], snippet):
             meta = {
-                "filename": out_file,
-                "start": start,
-                "end": end,
-                "duration": round(end - start, 2),
-                "title": title,
-                "reason": seg.get("reason", ""),
-                "source_video": file,
-                "transcript_snippet": transcript[int(start):int(end)]
+                "filename": filename,
+                "source_video": seg["source_video"],
+                "start": seg["start"],
+                "end": seg["end"],
+                "title": seg["title"],
+                "reason": seg["reason"],
+                "transcript_snippet": snippet,
+                "model_used": seg.get("model_used", "unknown")
             }
+            meta_path = os.path.join(DIRS["meta"], filename.replace(".mp4", ".json"))
+            json.dump(meta, open(meta_path, "w"), indent=2)
+            print(f"[💾] Saved metadata: {meta_path}")
 
-            with open(meta_file, "w") as f:
-                json.dump(meta, f, indent=2)
-            print(f"[🧾] Metadata saved: {meta_file}")
-
-    print("\n[✅] All done — clean smart clips + metadata ready!\n")
+    print("\n[✅] Slicer MVP complete.")
 
 if __name__ == "__main__":
     run_slicer()

@@ -1,0 +1,31 @@
+[MODEL]: mistral
+[ERROR]: JSON extraction failed: Expecting ',' delimiter: line 50 column 5 (char 2108)
+Raw:
+ [
+  {
+    "title": "Vitamins and Spiritual Journey",
+    "reason": "Relatable humour, self-improvement talk",
+    "start": 123,
+    "end": 174,
+    "snippet": "Take some vitamins do you yeah be taken take Vitamin B. Yeah, okay, okay, okay pause C.",
+    "hashtags": ["#HealthyLife", "#SelfCare"],
+    "category": "Lifestyle",
+    "comment_prompt": "Share your daily health routine and tag 3 friends to join you on this healthy journey!"
+  },
+  {
+    "title": "Viking Waffles: A Breakfast Mystery",
+    "reason": "Nostalgia, food curiosity",
+    "start": 265,
+    "end": 287,
+    "snippet": "I did find some protein waffles What are they called is it Viking waffles?",
+    "hashtags": ["#VikingWaffles", "#BreakfastMystery"],
+    "category": "Food and Drink",
+    "comment_prompt": "Have you ever tried Viking Waffles? Let's discover this old-school breakfast trend together!"
+  },
+  {
+    "title": "The Night with Spencer Browne (Viking Tale)",
+    "reason": "Unexpected friendship, humour",
+    "st
+
+[TRANSCRIPT SNIPPET]
+ I'll take some vitamins do you yeah be taken take Vitamin B. Yeah, okay, okay, okay pause C. Okay. Take some zinc. Oh, okay. That's it What you get like a multivitamin. Yeah, whatever the CBS things is. Oh, okay, there's yellow You know I'm talking about it's probably on shelf since the 70s. I don't think they're doing anything. I heard zinc makes you harder I haven't noticed a big result when you have like Saturday shows and you're like fuck you went out Friday night And then every single cell every single sleep because you're not at home Yeah, and then you have lunch. It's not very good for you What are you eating and then you're like okay? It's six shows a day. I got to wake up. I usually jack off and taking nap That was tell something. I don't know if it helps. I literally wake up 20 minutes before the car's coming in I'm like oh shit Forget you're doing a show Yeah, if you had a cold plunge in your room just plop in there You're under like the path to like making yourself a bette
